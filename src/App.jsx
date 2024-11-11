@@ -1,35 +1,97 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import Sidebar from './components/Sidebar';
+import Logs from './components/PocketLog';
+import BannerSection from './components/BannerSection';
+import Popup from './components/Popup';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [newGroupData, setNewGroupData] = useState({});
+  const [groupList, setGroupList] = useState([]);
+  const [activeGroup, setActiveGroup] = useState(null);
+  const [LogData, setLogData] = useState(null);
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 767);
+
+  useEffect(() => {
+    const updateView = () => {
+      setIsSmallScreen(window.innerWidth <= 767);
+    };
+
+    window.addEventListener('resize', updateView);
+
+    return () => window.removeEventListener('resize', updateView);
+  }, []);
+
+  useEffect(() => {
+    if (newGroupData.groupName && newGroupData.color) {
+      const storedGroups = JSON.parse(localStorage.getItem('group')) || [];
+      const isDuplicateGroup = storedGroups.some(
+        (group) => group.groupName === newGroupData.groupName
+      );
+
+      if (!isDuplicateGroup) {
+        const updatedGroupList = [...storedGroups, newGroupData];
+        localStorage.setItem('group', JSON.stringify(updatedGroupList));
+        setGroupList(updatedGroupList);
+      } else {
+        alert("This group name is already taken. Please select a different name.");
+      }
+    }
+  }, [newGroupData]);
+
+  useEffect(() => {
+    const savedGroups = localStorage.getItem('group');
+    if (savedGroups) {
+      setGroupList(JSON.parse(savedGroups));
+    }
+  }, []);
+
+  const selectGroupHandler = (group) => {
+    setActiveGroup(group);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className={`homepage ${isSmallScreen ? 'mobile' : 'desktop'}`}>
+      {isSmallScreen ? (
+        activeGroup ? (
+          <Logs
+            selectedGroup={activeGroup}
+            Logs={LogData}
+            setLogs={setLogData}
+            setSelectedGroup={setActiveGroup}
+          />
+        ) : (
+          <Sidebar
+            setOpenPopup={setIsPopupOpen}
+            groups={groupList}
+            selectedGroup={activeGroup}
+            setSelectedGroup={selectGroupHandler}
+          />
+        )
+      ) : (
+        <>
+          <Sidebar
+            setOpenPopup={setIsPopupOpen}
+            groups={groupList}
+            selectedGroup={activeGroup}
+            setSelectedGroup={selectGroupHandler}
+          />
+          {activeGroup ? (
+            <Logs selectedGroup={activeGroup} Logs={LogData} setLogs={setLogData} />
+          ) : (
+            <BannerSection />
+          )}
+        </>
+      )}
 
-export default App
+      {isPopupOpen && (
+        <Popup
+          setOpenPopup={setIsPopupOpen}
+          setGroupData={setNewGroupData}
+        />
+      )}
+    </div>
+  );
+};
+
+export default App;
