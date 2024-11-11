@@ -159,7 +159,7 @@
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2);
 }
 
-.log-text p{
+.log-text {
   padding: 5px 15px;
 }
 
@@ -184,7 +184,6 @@
   padding: 20px;
   width: 100%;
   height: clamp(130px, 10vw, 260px);
-  margin-top: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -214,9 +213,8 @@
 }
 
 @media screen and (max-width: 890px) {
-  .notes-content {
+  .log {
     padding: 0 10px;
-    overflow-y: auto;
     height: calc(100% - 60px - 180px);
   }
 }

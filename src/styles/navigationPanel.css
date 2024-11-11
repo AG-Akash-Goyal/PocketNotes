@@ -1,4 +1,4 @@
-.sidebarContainer{
+.navigationPanel{
     display: flex;
     flex-direction: column;
     width: 350px;
@@ -9,20 +9,20 @@
     padding: 2px;
 }
 
-.title{
+.header{
     font-size: clamp(25px, 3vw, 31px);
     text-align: center;
     padding: 30px 25px;
 }
 
-.groupList{
+.listOfGroups{
     display: flex;
     flex-direction: column;
     gap: 10px;
     overflow-y: auto;
 }
 
-.groupItem{
+.groupElement{
     display: flex;
     padding: 10px;
     align-items: center;
@@ -33,20 +33,20 @@
     margin: 0 10px;
 }
 
-.groupItem:hover{
+.groupElement:hover{
     background-color: #DCDCDC !important;
 }
 
-.groupIcon{
-    width: clamp(60px, 7vw, 70px);;
-    height: clamp(60px, 7vw, 70px);;
+.groupAvatar{
+    width: clamp(60px, 7vw, 70px);
+    height: clamp(60px, 7vw, 70px);
     position: relative;
     background-color: pink;
     border-radius: 50%;
     margin-right: 20px;
 }
 
-.groupIcon .Icon{
+.groupAvatar .avatarContent{
     position: absolute;
     top: 50%;
     left: 50%;
@@ -57,12 +57,12 @@
     color: #fff;
 }
 
-.groupName{
+.groupTitle{
     font-size: clamp(18px, 5vw, 24px);
     font-weight: 500;
 }
 
-.AddBtn{
+.addGroupBtn{
     width: clamp(70px, 7vw, 85px);
     height: clamp(70px, 7vw, 85px);
     border-radius: 50%;
@@ -80,10 +80,9 @@
 }
 
 @media screen and (max-width: 767px){
-    .title{
+    .header{
         font-size: clamp(28px, 5vw, 42px);
         text-align: center;
         padding: 30px 25px;
     }
-    
 }
